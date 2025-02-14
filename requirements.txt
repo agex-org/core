@@ -1,9 +1,8 @@
 fastapi
 uvicorn
-openai
 pymupdf
 langchain
 faiss-cpu
-sentence-transformers
 langchain-community
 langchain-openai
+duckduckgo-search
