@@ -3,11 +3,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.agents.analyzer_agent import TxAddressAnalyzerAgent
-from app.agents.auditor_agent import ContractAuditorAgent
-from app.agents.educator_agent import BlockchainEducatorAgent
-from app.config import Config
-from app.services.classification_service import ClassificationService
+from app.agents import agents
+from app.services import classifier
 
 router = APIRouter()
 
@@ -18,16 +15,10 @@ class Query(BaseModel):
 
 @router.post("/query")
 async def process_query(query: Query):
-    classifier = ClassificationService()
     classification = classifier.classify_query(query.query).lower()
 
-    if classification == Config.BLOCKCHAIN_EDUCATOR_NAME.lower():
-        agent = BlockchainEducatorAgent()
-    elif classification == Config.CONTRACT_AUDITOR_NAME.lower():
-        agent = ContractAuditorAgent()
-    elif classification == Config.TX_ADDRESS_ANALYZER_NAME.lower():
-        agent = TxAddressAnalyzerAgent()
-    else:
+    agent = agents.get(classification)
+    if not agent:
         raise HTTPException(status_code=400, detail="Could not classify the query")
 
     response = agent.handle_query(query.query)
