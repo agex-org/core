@@ -13,9 +13,9 @@ class ClassificationService:
     def classify_query(self, query: str) -> str:
         prompt = (
             f"Classify the following query into one of three categories: "
-            f"{Config.BLOCKCHAIN_EDUCATOR_NAME}, "
-            f"{Config.CONTRACT_AUDITOR_NAME}, or "
-            f"{Config.TX_ADDRESS_ANALYZER_NAME}. "
+            f"if it was related to educational information about blockchain, give: {Config.BLOCKCHAIN_EDUCATOR_NAME},"
+            f"if it was related to security stuff, give: {Config.CONTRACT_AUDITOR_NAME},"
+            f"if it was related to transaction address analysis, give: {Config.TX_ADDRESS_ANALYZER_NAME}.\n"
             f"Query: {query}\nCategory:"
             f"Just return the category, no other text."
         )
