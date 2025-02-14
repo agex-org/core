@@ -1,3 +1,10 @@
 fastapi
 uvicorn
 openai
+pymupdf
+langchain
+faiss-cpu
+chromadb
+sentence-transformers
+langchain-community
+langchain-openai

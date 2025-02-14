@@ -3,7 +3,6 @@
 .gitignore
 .gitattributes
 
-
 # CI
 .codeclimate.yml
 .travis.yml
@@ -87,3 +86,6 @@ venv/
 
 # VS Code
 .vscode/
+
+# FAISS
+faiss_index/
