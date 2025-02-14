@@ -19,13 +19,13 @@ class Query(BaseModel):
 @router.post("/query")
 async def process_query(query: Query):
     classifier = ClassificationService()
-    classification = classifier.classify_query(query.query)
+    classification = classifier.classify_query(query.query).lower()
 
-    if classification == Config.BLOCKCHAIN_EDUCATOR_NAME:
+    if classification == Config.BLOCKCHAIN_EDUCATOR_NAME.lower():
         agent = BlockchainEducatorAgent()
-    elif classification == Config.CONTRACT_AUDITOR_NAME:
+    elif classification == Config.CONTRACT_AUDITOR_NAME.lower():
         agent = ContractAuditorAgent()
-    elif classification == Config.TX_ADDRESS_ANALYZER_NAME:
+    elif classification == Config.TX_ADDRESS_ANALYZER_NAME.lower():
         agent = TxAddressAnalyzerAgent()
     else:
         raise HTTPException(status_code=400, detail="Could not classify the query")

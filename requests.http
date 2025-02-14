@@ -1,0 +1,22 @@
+POST http://localhost:8000/api/query
+Content-Type: application/json
+
+{
+    "query": "What is the role of a blockchain node?"
+}
+
+###
+POST http://localhost:8000/api/query
+Content-Type: application/json
+
+{
+    "query": "What is the security audit of the contract 0x45343543543432432342647654?"
+}
+
+###
+POST http://localhost:8000/api/query
+Content-Type: application/json
+
+{
+    "query": "Has 0x45343543543432432342647654 ever transacted with an exchange?"
+}
