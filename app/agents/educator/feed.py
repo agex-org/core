@@ -28,6 +28,10 @@ def load_and_chunk_pdfs(pdf_files):
     return texts
 
 
+if os.getenv("FEED_EDUCATOR") == "False":
+    print("Skipping PDF processing and embedding")
+    exit()
+
 print("Loading and chunking PDFs...")
 base_path = os.path.dirname(os.path.abspath(__file__))
 books_path = os.path.join(base_path, "books")
@@ -39,7 +43,7 @@ print(f"Loaded {len(documents)} documents")
 embedding_model = OpenAIEmbeddings(api_key=os.getenv("OPENAI_API_KEY"))
 print("Embedding documents...")
 vector_db = FAISS.from_texts(documents, embedding_model)
-print(f"Vector database created with {len(vector_db._index.docstore.docs)} documents")
+print("Vector database created")
 print("Saving FAISS index...")
 vector_db.save_local("faiss_index")
 print("✅ PDFs processed and stored in FAISS!")
