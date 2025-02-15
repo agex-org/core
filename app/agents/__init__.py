@@ -1,6 +1,6 @@
 from app.agents.analyzer_agent import TxAddressAnalyzerAgent
 from app.agents.auditor_agent import ContractAuditorAgent
-from app.agents.educator_agent import BlockchainEducatorAgent
+from app.agents.educator.agent import BlockchainEducatorAgent
 from app.config import Config
 
 agents = {

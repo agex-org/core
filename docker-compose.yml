@@ -3,8 +3,28 @@ version: '3.8'
 services:
   app:
     build: .
+    volumes:
+      - ./app:/app/app
+      - ./faiss_index:/app/faiss_index
+      - ./pip_cache:/root/.cache/pip
     ports:
       - "8000:8000"
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     env_file:
       - .env
+    depends_on:
+      feed-educator:
+        condition: service_completed_successfully
+
+  feed-educator:
+    build: .
+    volumes:
+      - ./app:/app/app
+      - ./faiss_index:/app/faiss_index
+      - ./pip_cache:/root/.cache/pip
+    command: python app/agents/educator/feed.py
+    env_file:
+      - .env
+
+volumes:
+  pip_cache:

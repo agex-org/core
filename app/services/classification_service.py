@@ -1,14 +1,18 @@
 # app/services/classification_service.py
 
-import openai
+from langchain_openai import ChatOpenAI
 
 from app.config import Config
 
 
 class ClassificationService:
     def __init__(self):
-        openai.api_key = Config.OPENAI_API_KEY
-        openai.base_url = Config.OPENAI_BASE_URL
+        self.llm = ChatOpenAI(
+            openai_api_key=Config.OPENAI_API_KEY,
+            openai_api_base=Config.OPENAI_BASE_URL,
+            model="gpt-4",
+            temperature=0,
+        )
 
     def classify_query(self, query: str) -> str:
         prompt = (
@@ -19,9 +23,8 @@ class ClassificationService:
             f"Query: {query}\nCategory:"
             f"Just return the category, no other text."
         )
-        response = openai.chat.completions.create(
-            model=Config.OPENAI_MODEL,
-            messages=[{"role": "user", "content": prompt}],
+        response = self.llm.invoke(
+            input=prompt,
         )
-        classification = response.choices[0].message.content.strip().lower()
+        classification = response.content
         return classification
