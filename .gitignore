@@ -182,3 +182,7 @@ faiss_index/
 
 # ignore all files in the pip_cache directory
 pip_cache/
+
+
+# ignore all files in the redis_data directory
+redis_data/

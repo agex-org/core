@@ -12,9 +12,13 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     env_file:
       - .env
+    networks:
+      - agex-network
     depends_on:
       feed-educator:
         condition: service_completed_successfully
+      redis:
+        condition: service_started
 
   feed-educator:
     build: .
@@ -25,6 +29,20 @@ services:
     command: python app/agents/educator/feed.py
     env_file:
       - .env
+    networks:
+      - agex-network
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - agex-network
+
+networks:
+  agex-network:
+    driver: bridge
 
 volumes:
   pip_cache:
+  redis_data:

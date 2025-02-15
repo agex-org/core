@@ -2,7 +2,7 @@
 
 
 class TxAddressAnalyzerAgent:
-    def handle_query(self, query: str) -> str:
+    def handle_query(self, query: str, chat_history: list = None) -> str:
         # Here you might use web3.py to fetch transaction data and analyze it.
         return (
             "Transaction Analysis: The provided transaction has normal gas usage and the address "
