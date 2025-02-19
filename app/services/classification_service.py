@@ -2,19 +2,13 @@
 
 from typing import Dict, List
 
-from langchain_openai import ChatOpenAI
-
+from app.agents.educator.agent import OllamaLLM
 from app.config import Config
 
 
 class ClassificationService:
     def __init__(self):
-        self.llm = ChatOpenAI(
-            openai_api_key=Config.OPENAI_API_KEY,
-            openai_api_base=Config.OPENAI_BASE_URL,
-            model="gpt-4",
-            temperature=0,
-        )
+        self.llm = OllamaLLM(model_name="llama2:7b", temperature=0, max_tokens=256)
 
     def _format_chat_context(self, chat_history: List[Dict]) -> str:
         """Format chat history into a context string for classification."""
@@ -39,8 +33,5 @@ class ClassificationService:
             f"Query: {query}\nCategory:"
             f"Just return the category, no other text."
         )
-        response = self.llm.invoke(
-            input=prompt,
-        )
-        classification = response.content
+        classification = self.llm(prompt)
         return classification

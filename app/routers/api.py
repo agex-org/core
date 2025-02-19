@@ -25,7 +25,7 @@ async def process_query(query: Query, request: Request):
     classification = classifier.classify_query(query.query, chat_history).lower()
     agent = agents.get(classification)
     if not agent:
-        raise HTTPException(status_code=400, detail="Could not classify the query")
+        raise HTTPException(status_code=200, detail="Could not classify the query")
 
     # Pass chat history to agent
     response = agent.handle_query(query.query, chat_history)
