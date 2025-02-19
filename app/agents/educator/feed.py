@@ -3,9 +3,9 @@ import os
 
 import fitz
 from dotenv import load_dotenv
+from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_openai import OpenAIEmbeddings
 
 load_dotenv()
 
@@ -40,7 +40,10 @@ print(f"Found {len(pdf_files)} PDFs in {books_path}")
 documents = load_and_chunk_pdfs(pdf_files)
 print(f"Loaded {len(documents)} documents")
 
-embedding_model = OpenAIEmbeddings(api_key=os.getenv("OPENAI_API_KEY"))
+# Use a local Hugging Face embedding model for generating embeddings
+embedding_model = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 print("Embedding documents...")
 vector_db = FAISS.from_texts(documents, embedding_model)
 print("Vector database created")
