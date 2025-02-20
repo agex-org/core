@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "7d62937a-af34-40da-a451-6c83b16cf07b",
+		"name": "agex",
+		"description": "This collection tests the Agex API endpoints. It includes endpoints for creating a chat session, listing sessions, fetching chat history, and processing queries within a session.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12970034"
+	},
+	"item": [
+		{
+			"name": "Create New Session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response has session_id', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('session_id');",
+							"    // Save session_id for later requests",
+							"    pm.environment.set('session_id', jsonData.session_id);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": "Specifies that the request body format is JSON."
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"My Chat Session Title\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/create",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"create"
+					]
+				},
+				"description": "Creates a new chat session with a given title. Returns a session_id."
+			},
+			"response": []
+		},
+		{
+			"name": "List All Sessions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response contains chat_history_list', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('chat_history_list');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/list",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"list"
+					]
+				},
+				"description": "Retrieves a list of all chat session IDs for the client."
+			},
+			"response": []
+		},
+		{
+			"name": "Session Chat History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response contains session_id and history', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('session_id');",
+							"    pm.expect(jsonData).to.have.property('history');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/{{session_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"{{session_id}}"
+					]
+				},
+				"description": "Retrieves the chat history for a specified session. Returns a 200 even if history is empty, provided the session exists."
+			},
+			"response": []
+		},
+		{
+			"name": "Process Query",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response has classification, response, and history', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('classification');",
+							"    pm.expect(jsonData).to.have.property('response');",
+							"    pm.expect(jsonData).to.have.property('history');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": "Specifies that the request body format is JSON."
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"query\": \"Tell me about the sonic blockchain\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/{{session_id}}/query",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"{{session_id}}",
+						"query"
+					]
+				},
+				"description": "Processes a query in the context of a specific session. Returns a classification, response, and updated chat history."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8000/api"
+		},
+		{
+			"key": "session_id",
+			"value": ""
+		}
+	]
+}
