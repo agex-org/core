@@ -65,6 +65,12 @@ async def process_query(session_id: str, query: Query, request: Request):
     Uses the classifier and corresponding agent to handle the query.
     """
     client_ip = request.client.host
+
+    # Ensure the session exists by checking the sessions list
+    sessions = chat_history_service.get_sessions(client_ip)
+    if not any(session["session_id"] == session_id for session in sessions):
+        raise HTTPException(status_code=404, detail="Session not found")
+
     # Get existing chat history for the session
     history = chat_history_service.get_history(client_ip, session_id)
     # Classify the query using the history context
