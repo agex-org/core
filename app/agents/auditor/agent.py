@@ -8,10 +8,11 @@ from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
+from app.agents.base import BaseAgent
 from app.config import Config
 
 
-class ContractAuditorAgent:
+class ContractAuditorAgent(BaseAgent):
     def __init__(self):
         # Initialize LLM
         self.llm = ChatOpenAI(
