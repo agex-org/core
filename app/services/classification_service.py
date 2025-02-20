@@ -12,7 +12,7 @@ class ClassificationService:
         self.llm = ChatOpenAI(
             openai_api_key=Config.OPENAI_API_KEY,
             openai_api_base=Config.OPENAI_BASE_URL,
-            model="gpt-4",
+            model=Config.OPENAI_MODEL,
             temperature=0,
         )
 

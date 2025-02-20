@@ -2,12 +2,19 @@
 
 ## install dev dependencies
 
-`pip install -r requirements-dev.txt`
-`pre-commit install`
+```shell
+   pip install -r requirements-dev.txt
+ ```
+
+ ```shell
+   pre-commit install
+ ```
 
 ## run project
 
-`docker compose up [--build]`
+```shell
+   docker compose up [--build]
+ ```
 
 ## Optional tools
 Install [Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension to be able to send requests in the `requests.http` file.
