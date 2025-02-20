@@ -56,15 +56,3 @@ def process_pdfs(input_dir, output_dir):
     print(f"Saving FAISS index to {output_dir}...")
     vector_db.save_local(output_dir)
     print("✅ PDFs processed and stored in FAISS!")
-
-
-if __name__ == "__main__":
-    if os.getenv("FEED_EDUCATOR") == "False":
-        print("Skipping PDF processing and embedding")
-        exit()
-
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    books_path = os.path.join(base_path, "books")
-    faiss_path = "faiss_index/educator"
-
-    process_pdfs(books_path, faiss_path)
