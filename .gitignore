@@ -177,9 +177,6 @@ cython_debug/
 # FAISS
 faiss_index/
 
-# ignore all pdf files
-*.pdf
-
 # ignore all files in the pip_cache directory
 pip_cache/
 
