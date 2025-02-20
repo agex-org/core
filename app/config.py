@@ -12,6 +12,10 @@ class Config:
     OPENAI_MODEL = os.getenv("OPENAI_MODEL")
     MAX_TOKENS = 10
 
+    # Feed configuration
+    FEED_AUDITOR = os.getenv("FEED_AUDITOR", "False") == "True"
+    FEED_EDUCATOR = os.getenv("FEED_EDUCATOR", "False") == "True"
+
     # Agent names
     BLOCKCHAIN_EDUCATOR_NAME = "Blockchain Educator"
     CONTRACT_AUDITOR_NAME = "Contract Auditor"
