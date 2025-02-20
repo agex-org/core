@@ -44,13 +44,17 @@ async def list_sessions(request: Request):
 
 @router.get("/{session_id}")
 async def get_history(session_id: str, request: Request):
+    client_ip = request.client.host
+
+    # Check if the session exists in the sessions list
+    sessions = chat_history_service.get_sessions(client_ip)
+    if not any(session["session_id"] == session_id for session in sessions):
+        raise HTTPException(status_code=404, detail="Session not found")
+
     """
     Get the chat history for a given session id.
     """
-    client_ip = request.client.host
     history = chat_history_service.get_history(client_ip, session_id)
-    if not history:
-        raise HTTPException(status_code=404, detail="Session not found or empty")
     return {"session_id": session_id, "history": history}
 
 

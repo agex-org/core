@@ -28,7 +28,7 @@ class ChatHistoryService:
         Create a new chat session for the client with a title.
         A simple session_id is generated using a portion of a UUID.
         """
-        session_id = str(uuid.uuid4().int)[:6]  # e.g. "763875"
+        session_id = str(uuid.uuid4().int)[:12]  # e.g. 123456789012
         session_info = {
             "session_id": session_id,
             "title": title,
