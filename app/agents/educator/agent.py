@@ -20,7 +20,9 @@ class BlockchainEducatorAgent:
             temperature=0,
         )
         self.vector_store = FAISS.load_local(
-            "faiss_index", OpenAIEmbeddings(), allow_dangerous_deserialization=True
+            "faiss_index/educator",
+            OpenAIEmbeddings(),
+            allow_dangerous_deserialization=True,
         )
         self.qa_chain = RetrievalQA.from_chain_type(
             llm=self.llm,
