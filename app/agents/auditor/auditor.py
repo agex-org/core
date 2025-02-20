@@ -71,7 +71,7 @@ class ContractAuditorAgent:
                 "module": "contract",
                 "action": "getsourcecode",
                 "address": address,
-                "apikey": "D3UXS9I8T3Z3I5WRMHCAXZ8DQ7YT986T4R",
+                "apikey": Config.SONICSCAN_API_KEY,
             }
 
             response = requests.get(url, params=params)
