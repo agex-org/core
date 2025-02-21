@@ -82,3 +82,8 @@ class ChatHistoryService:
             chat_history = chat_history[-self.max_history :]
         self.redis_client.set(history_key, json.dumps(chat_history))
         return chat_history
+
+    def flush(self):
+        self.redis_client.flushall()
+        print("Redis flushed")
+        return True

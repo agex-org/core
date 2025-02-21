@@ -1,7 +1,9 @@
-# app/agents/analyzer_agent.py
+# app/agents/tx_analyzer_agent.py
+
+from app.agents.base import BaseAgent
 
 
-class TxAddressAnalyzerAgent:
+class TxAnalyzerAgent(BaseAgent):
     def handle_query(self, query: str, chat_history: list = None) -> str:
         # Here you might use web3.py to fetch transaction data and analyze it.
         return (
