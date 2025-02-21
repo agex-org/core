@@ -32,6 +32,18 @@ services:
     networks:
       - agex-network
 
+  feed-auditor:
+    build: .
+    volumes:
+      - ./app:/app/app
+      - ./faiss_index:/app/faiss_index
+      - ./pip_cache:/root/.cache/pip
+    command: python app/agents/auditor/feed.py
+    env_file:
+      - .env
+    networks:
+      - agex-network
+
   redis:
     image: redis:alpine
     volumes:
