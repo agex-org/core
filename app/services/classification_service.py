@@ -39,8 +39,10 @@ class ClassificationService:
             f"Query: {query}\nCategory:"
             f"Just return the category, no other text."
         )
+        print("Classifying query...")
         response = self.llm.invoke(
             input=prompt,
         )
         classification = response.content
+        print(f"Classification: {classification}")
         return classification
