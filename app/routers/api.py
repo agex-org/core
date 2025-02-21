@@ -58,6 +58,15 @@ async def get_history(session_id: str, request: Request):
     return {"session_id": session_id, "history": history}
 
 
+@router.post("/flush")
+async def flush(request: Request):
+    """
+    Flush the chat history.
+    """
+    chat_history_service.flush()
+    return {"message": "Chat history flushed"}
+
+
 @router.post("/{session_id}/query")
 async def process_query(session_id: str, query: Query, request: Request):
     """

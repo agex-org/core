@@ -19,7 +19,8 @@ class Config:
     # Agent names
     BLOCKCHAIN_EDUCATOR_NAME = "Blockchain Educator"
     CONTRACT_AUDITOR_NAME = "Contract Auditor"
-    TX_ADDRESS_ANALYZER_NAME = "Transaction/Address Analyzer"
+    TX_ANALYZER_NAME = "Transaction Analyzer"
+    ADDRESS_ANALYZER_NAME = "Address Analyzer"
 
     # Redis configuration
     REDIS_HOST = os.getenv("REDIS_HOST", "redis")

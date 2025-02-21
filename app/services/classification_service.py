@@ -35,7 +35,8 @@ class ClassificationService:
             f"{context}classify the following query into one of three categories: "
             f"if it was related to educational information about blockchain, give: {Config.BLOCKCHAIN_EDUCATOR_NAME},"
             f"if it was related to security stuff, give: {Config.CONTRACT_AUDITOR_NAME},"
-            f"if it was related to transaction address analysis, give: {Config.TX_ADDRESS_ANALYZER_NAME}.\n"
+            f"if it was related to address (42 characters long) analysis, give: {Config.ADDRESS_ANALYZER_NAME}.\n"
+            f"if it was related to transaction (66 characters long) analysis, give: {Config.TX_ANALYZER_NAME}.\n"
             f"Query: {query}\nCategory:"
             f"Just return the category, no other text."
         )
