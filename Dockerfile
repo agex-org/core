@@ -28,3 +28,6 @@ RUN pip install --cache-dir /pip_cache -r requirements.txt
 
 # Copy project files
 COPY ./app /app/app
+
+# Ensure app directory is in Python path
+ENV PYTHONPATH=/app:$PYTHONPATH
