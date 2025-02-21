@@ -35,11 +35,7 @@ class ChatHistoryService:
             "created_at": datetime.utcnow().isoformat(),
         }
         sessions_list_key = self._sessions_list_key(client_ip)
-        sessions = self.redis_client.get(sessions_list_key)
-        if sessions:
-            sessions = json.loads(sessions)
-        else:
-            sessions = []
+        sessions = self.get_sessions(client_ip)
         sessions.append(session_info)
         self.redis_client.setex(
             sessions_list_key, self.expiry_seconds, json.dumps(sessions)
