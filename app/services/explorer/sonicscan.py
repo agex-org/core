@@ -1,0 +1,2 @@
+class Sonicscan:
+    pass
