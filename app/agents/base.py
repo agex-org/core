@@ -4,7 +4,13 @@ from langchain.agents import AgentExecutor
 
 
 class BaseAgent(ABC):
+    _instances = {}
     agent: AgentExecutor
+
+    def __new__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__new__(cls)
+        return cls._instances[cls]
 
     def handle_query(self, query: str, chat_history: list = None) -> str:
         try:

@@ -28,7 +28,7 @@ async def process_query(query: Query, request: Request):
         raise HTTPException(status_code=200, detail="Could not classify the query")
 
     # Pass chat history to agent
-    response = agent.handle_query(query.query, chat_history)
+    response = agent().handle_query(query.query, chat_history)
 
     # Store the interaction and get updated history
     chat_history = chat_history_service.add_interaction(
