@@ -15,7 +15,6 @@ class ChatHistoryService:
             host=Config.REDIS_HOST, port=Config.REDIS_PORT, db=0, decode_responses=True
         )
         self.max_history = 10
-        self.expiry_seconds = 24 * 60 * 60  # 24 hours
 
     def _session_key(self, client_ip: str, session_id: str) -> str:
         return f"chat_history:{client_ip}:{session_id}"
@@ -37,13 +36,10 @@ class ChatHistoryService:
         sessions_list_key = self._sessions_list_key(client_ip)
         sessions = self.get_sessions(client_ip)
         sessions.append(session_info)
-        self.redis_client.setex(
-            sessions_list_key, self.expiry_seconds, json.dumps(sessions)
-        )
+        self.redis_client.setex(sessions_list_key, json.dumps(sessions))
         # Initialize an empty chat history for the new session.
         self.redis_client.setex(
             self._session_key(client_ip, session_id),
-            self.expiry_seconds,
             json.dumps([]),
         )
         return session_id
@@ -84,7 +80,5 @@ class ChatHistoryService:
         chat_history.append(interaction)
         if len(chat_history) > self.max_history:
             chat_history = chat_history[-self.max_history :]
-        self.redis_client.setex(
-            history_key, self.expiry_seconds, json.dumps(chat_history)
-        )
+        self.redis_client.setex(history_key, json.dumps(chat_history))
         return chat_history
