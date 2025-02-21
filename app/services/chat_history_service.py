@@ -36,9 +36,9 @@ class ChatHistoryService:
         sessions_list_key = self._sessions_list_key(client_ip)
         sessions = self.get_sessions(client_ip)
         sessions.append(session_info)
-        self.redis_client.setex(sessions_list_key, json.dumps(sessions))
+        self.redis_client.set(sessions_list_key, json.dumps(sessions))
         # Initialize an empty chat history for the new session.
-        self.redis_client.setex(
+        self.redis_client.set(
             self._session_key(client_ip, session_id),
             json.dumps([]),
         )
@@ -80,5 +80,5 @@ class ChatHistoryService:
         chat_history.append(interaction)
         if len(chat_history) > self.max_history:
             chat_history = chat_history[-self.max_history :]
-        self.redis_client.setex(history_key, json.dumps(chat_history))
+        self.redis_client.set(history_key, json.dumps(chat_history))
         return chat_history
