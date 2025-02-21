@@ -52,3 +52,4 @@ class BlockchainEducatorAgent(BaseAgent):
             agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=True,
         )
+        self.agent.handle_parsing_errors = True
