@@ -38,7 +38,7 @@ async def list_sessions(request: Request):
     client_ip = request.client.host
     sessions = chat_history_service.get_sessions(client_ip)
     # Return only the session ids (or you could return the full info if needed)
-    session_ids = [session["session_id"] for session in sessions]
+    session_ids = [{"session_id": session["session_id"], "title": session["title"]} for session in sessions]
     return {"chat_history_list": session_ids}
 
 
