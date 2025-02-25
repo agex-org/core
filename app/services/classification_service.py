@@ -32,7 +32,7 @@ class ClassificationService:
         context = self._format_chat_context(chat_history) if chat_history else ""
 
         prompt = (
-            f"{context}classify the following query into one of three categories: "
+            f"{context}classify the following query into one of four categories: "
             f"if it was related to educational information about blockchain, give: {Config.BLOCKCHAIN_EDUCATOR_NAME},"
             f"if it was related to security stuff, give: {Config.CONTRACT_AUDITOR_NAME},"
             f"if it was related to address (42 characters long) analysis, give: {Config.ADDRESS_ANALYZER_NAME}.\n"
