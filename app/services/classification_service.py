@@ -15,6 +15,9 @@ class ClassificationService:
             model=Config.OPENAI_MODEL,
             temperature=0,
         )
+        self.context_interactions = (
+            Config.ClassificationContextInteractions
+        )  # Number of past interactions to include
 
     def _format_chat_context(self, chat_history: List[Dict]) -> str:
         """Format chat history into a context string for classification."""
@@ -22,7 +25,7 @@ class ClassificationService:
             return ""
 
         context = "Previous conversation:\n"
-        for interaction in chat_history[-3:]:  # Use last 3 interactions
+        for interaction in chat_history[-self.context_interactions :]:
             context += f"Human: {interaction['query']}\n"
             context += f"Assistant: {interaction['response']}\n"
         context += "\nBased on this conversation context and the new question, "

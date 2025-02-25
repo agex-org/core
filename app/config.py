@@ -16,6 +16,9 @@ class Config:
     FEED_AUDITOR = os.getenv("FEED_AUDITOR", "False") == "True"
     FEED_EDUCATOR = os.getenv("FEED_EDUCATOR", "False") == "True"
 
+    # Classification context interactions
+    ClassificationContextInteractions: int = 3
+
     # Agent names
     BLOCKCHAIN_EDUCATOR_NAME = "Blockchain Educator"
     CONTRACT_AUDITOR_NAME = "Contract Auditor"
