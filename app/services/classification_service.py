@@ -41,9 +41,13 @@ class ClassificationService:
             f"Just return the category, no other text."
         )
         print("Classifying query...")
-        response = self.llm.invoke(
-            input=prompt,
-        )
-        classification = response.content
+        try:
+            response = self.llm.invoke(
+                input=prompt,
+            )
+            classification = response.content
+        except Exception as e:
+            print(f"Error during classification: {e}")
+            classification = "Unknown"
         print(f"Classification: {classification}")
         return classification
