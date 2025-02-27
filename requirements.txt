@@ -7,3 +7,4 @@ langchain-community
 langchain-openai
 duckduckgo-search
 redis
+web3
