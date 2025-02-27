@@ -6,6 +6,7 @@ from langchain_openai import ChatOpenAI
 
 from app.agents.base import BaseAgent
 from app.config import Config
+from app.services.address_first_activity import AddressFirstActivityService
 from app.services.batch_balance.base import BatchBalanceService
 
 
@@ -28,7 +29,16 @@ class AddressAnalyzerAgent(BaseAgent):
             description="Get the token balances of a given address",
         )
 
-        tools = [self.balance_tool]
+        self.address_first_activity_service = AddressFirstActivityService(
+            Config.SONICSCAN_API_URL, Config.SONICSCAN_API_KEY
+        )
+        self.first_activity_tool = Tool(
+            name="Get First Activity of Address",
+            func=self.address_first_activity_service.get_first_activity,
+            description="Get the first activity of a given address",
+        )
+
+        tools = [self.balance_tool, self.first_activity_tool]
 
         self.agent = initialize_agent(
             tools=tools,
