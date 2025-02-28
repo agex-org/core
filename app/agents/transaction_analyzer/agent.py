@@ -6,25 +6,49 @@ from langchain_openai import ChatOpenAI
 from app.agents.base import BaseAgent
 from app.config import Config
 from app.services.timestamp_to_data import TimestampToDataService
+from app.services.transaction import TransactionService
 
 
 class TransactionAnalyzerAgent(BaseAgent):
     def __init__(self):
         super().__init__()
+
+        # Initialize the LLM for transaction analysis
         self.llm = ChatOpenAI(
             openai_api_key=Config.OPENAI_API_KEY,
             openai_api_base=Config.OPENAI_BASE_URL,
             model=Config.OPENAI_MODEL,
         )
-        self.timestamp_to_data_service = TimestampToDataService()
-        self.timestamp_to_data_tool = Tool(
-            name="Timestamp to Data",
-            func=self.timestamp_to_data_service.get_data,
-            description="Convert a timestamp to a date and time",
+
+        # Transaction Service
+        self.transaction_service = TransactionService(
+            Config.SONICSCAN_API_URL, Config.SONICSCAN_API_KEY
         )
 
+        # self.tx_detail_tool = Tool(
+        #     name="Get Transaction Details",
+        #     func=self.transaction_service.get_transaction_details,
+        #     description="Fetches detailed information for a given transaction hash from the Sonic Network",
+        # )
+
+        self.tx_receipt_tool = Tool(
+            name="Get Transaction Receipt",
+            func=self.transaction_service.get_transaction_receipt,
+            description="Retrieves the receipt for a given transaction hash from the Sonic Network",
+        )
+
+        # # Service to structure the final analysis of the transaction.
+        # self.tx_analysis_formatter = TxAnalysisFormatter(self.llm)
+        # self.tx_analysis_tool = Tool(
+        #     name="Structure Transaction Analysis",
+        #     func=self.tx_analysis_formatter.format_analysis,
+        #     description="Structures a final summary of the transaction analysis, including status, gas usage, and key details",
+        # )
+
         tools = [
-            self.timestamp_to_data_tool,
+            # self.tx_detail_tool,
+            self.tx_receipt_tool,
+            # self.tx_analysis_tool,
         ]
 
         self.agent = initialize_agent(
