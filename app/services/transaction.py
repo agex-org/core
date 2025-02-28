@@ -24,7 +24,11 @@ class TransactionService:
             }
             response = requests.get(self.sonicscan_api_url, params=params)
             response.raise_for_status()  # Raise an exception for HTTP errors.
-            return response.json()
+            data = response.json()
+            # If there's a "result" field, convert its numeric hex fields to integers.
+            if "result" in data and isinstance(data["result"], dict):
+                data["result"] = convert_numeric_hex_fields(data["result"])
+            return json.dumps(data, indent=2)
         except Exception as e:
             return f"Error fetching transaction receipt from SonicScan: {e}"
 
@@ -38,7 +42,11 @@ class TransactionService:
             }
             response = requests.get(self.sonicscan_api_url, params=params)
             response.raise_for_status()  # Raise an exception for HTTP errors.
-            return response.json()
+            data = response.json()
+            # If there's a "result" field, convert its numeric hex fields to integers.
+            if "result" in data and isinstance(data["result"], dict):
+                data["result"] = convert_numeric_hex_fields(data["result"])
+            return json.dumps(data, indent=2)
         except Exception as e:
             return f"Error fetching transaction receipt from SonicScan: {e}"
 
@@ -92,3 +100,42 @@ def convert_to_serializable(obj):
         return [convert_to_serializable(item) for item in obj]
     else:
         return obj
+
+
+def convert_numeric_hex_fields(data):
+    """
+    Recursively convert specific hex string fields to integers.
+    Only keys defined in numeric_keys are converted if their value is a hex string.
+    """
+    numeric_keys = {
+        "blockNumber",
+        "gas",
+        "gasPrice",
+        "nonce",
+        "transactionIndex",
+        "value",
+        "gasUsed",
+        "cumulativeGasUsed",
+        "effectiveGasPrice",
+        "logIndex",
+        "maxFeePerBlobGas",
+    }
+    if isinstance(data, dict):
+        new_data = {}
+        for key, value in data.items():
+            if (
+                key in numeric_keys
+                and isinstance(value, str)
+                and value.startswith("0x")
+            ):
+                try:
+                    new_data[key] = int(value, 16)
+                except Exception:
+                    new_data[key] = value
+            else:
+                new_data[key] = convert_numeric_hex_fields(value)
+        return new_data
+    elif isinstance(data, list):
+        return [convert_numeric_hex_fields(item) for item in data]
+    else:
+        return data
