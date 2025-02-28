@@ -33,6 +33,8 @@ class Config:
     SONICSCAN_API_URL = "https://api.sonicscan.org/api"
     SONICSCAN_API_KEY = os.getenv("SONICSCAN_API_KEY")
 
-    # Batch balance configuration
+    # Contracts
     BATCH_BALANCE_CONTRACT_ADDRESS = "0xFe42B641bD4489E28914756Be84f2a7E2dF8Ab2B"
-    SONIC_RPC_URL = os.getenv("SONIC_RPC_URL")
+
+    # Node configuration
+    SONIC_NODE_RPC_URL = os.getenv("SONIC_NODE_RPC_URL")
