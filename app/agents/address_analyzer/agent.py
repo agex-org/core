@@ -8,6 +8,8 @@ from app.agents.base import BaseAgent
 from app.config import Config
 from app.services.address_first_activity import AddressFirstActivityService
 from app.services.batch_balance.base import BatchBalanceService
+from app.services.is_contract_service import IsContractService
+from app.services.timestamp_to_data import TimestampToDataService
 
 
 class AddressAnalyzerAgent(BaseAgent):
@@ -29,6 +31,12 @@ class AddressAnalyzerAgent(BaseAgent):
             description="Get the token balances of a given address",
         )
 
+        self.is_contract_service = IsContractService(Config.SONIC_RPC_URL)
+        self.is_contract_tool = Tool(
+            name="Is Contract",
+            func=self.is_contract_service.is_contract,
+            description="Check if a given address is a contract",
+        )
         self.address_first_activity_service = AddressFirstActivityService(
             Config.SONICSCAN_API_URL, Config.SONICSCAN_API_KEY
         )
@@ -38,7 +46,18 @@ class AddressAnalyzerAgent(BaseAgent):
             description="Get the first activity of a given address",
         )
 
-        tools = [self.balance_tool, self.first_activity_tool]
+        self.timestamp_to_data_service = TimestampToDataService()
+        self.timestamp_to_data_tool = Tool(
+            name="Timestamp to Data",
+            func=self.timestamp_to_data_service.get_data,
+            description="Convert a timestamp to a date and time",
+        )
+        tools = [
+            self.balance_tool,
+            self.first_activity_tool,
+            self.is_contract_tool,
+            self.timestamp_to_data_tool,
+        ]
 
         self.agent = initialize_agent(
             tools=tools,
