@@ -26,6 +26,7 @@ class TransactionAnalyzerAgent(BaseAgent):
             Config.SONIC_NODE_RPC_URL,
         )
 
+        # Tools for fetching data from SonicScan.
         self.tx_detail_tool = Tool(
             name="Get Transaction Details From SonicScan",
             func=self.transaction_service.get_transaction_details_sonicscan,
@@ -36,6 +37,19 @@ class TransactionAnalyzerAgent(BaseAgent):
             name="Get Transaction Receipt From SonicScan",
             func=self.transaction_service.get_transaction_receipt_sonicscan,
             description="Retrieves the receipt for a given transaction hash from the Sonic Blockchain Explorer",
+        )
+
+        # Tools for fetching data directly from the Sonic Node.
+        self.node_tx_detail_tool = Tool(
+            name="Get Transaction Details From Sonic Node",
+            func=self.transaction_service.get_transaction_details_node,
+            description="Fetches detailed transaction information directly from the Sonic Node",
+        )
+
+        self.node_tx_receipt_tool = Tool(
+            name="Get Transaction Receipt From Sonic Node",
+            func=self.transaction_service.get_transaction_receipt_node,
+            description="Retrieves the transaction receipt directly from the Sonic Node",
         )
 
         # # Service to structure the final analysis of the transaction.
@@ -49,7 +63,8 @@ class TransactionAnalyzerAgent(BaseAgent):
         tools = [
             self.tx_detail_tool,
             self.tx_receipt_tool,
-            # self.tx_analysis_tool,
+            self.node_tx_detail_tool,
+            self.node_tx_receipt_tool,
         ]
 
         self.agent = initialize_agent(
