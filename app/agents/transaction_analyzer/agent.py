@@ -5,6 +5,8 @@ from langchain_openai import ChatOpenAI
 
 from app.agents.base import BaseAgent
 from app.config import Config
+from app.services.is_contract_service import IsContractService
+from app.services.timestamp_to_data import TimestampToDataService
 from app.services.transaction import TransactionService
 
 
@@ -56,6 +58,22 @@ class TransactionAnalyzerAgent(BaseAgent):
             name="Get Transaction Logs From Sonic Node",
             func=self.transaction_service.get_transaction_logs_node,
             description="Retrieves the transaction logs directly from the Sonic Node",
+        )
+
+        # Timestamp to Data
+        self.timestamp_to_data_service = TimestampToDataService()
+        self.timestamp_to_data_tool = Tool(
+            name="Timestamp to Data",
+            func=self.timestamp_to_data_service.get_data,
+            description="Convert a timestamp to a date and time",
+        )
+
+        # Is Contract
+        self.is_contract_service = IsContractService(Config.SONIC_NODE_RPC_URL)
+        self.is_contract_tool = Tool(
+            name="Is Contract",
+            func=self.is_contract_service.is_contract,
+            description="Check if a given address is a contract",
         )
 
         tools = [
