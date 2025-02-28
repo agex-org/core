@@ -1,13 +1,40 @@
 # app/agents/agent.py
-from web3 import Web3
+from langchain.agents import AgentType, initialize_agent
+from langchain.tools import Tool
+from langchain_openai import ChatOpenAI
 
 from app.agents.base import BaseAgent
 from app.config import Config
+from app.services.timestamp_to_data import TimestampToDataService
 
 
 class TransactionAnalyzerAgent(BaseAgent):
     def __init__(self):
-        self.web3 = Web3(Web3.HTTPProvider(Config.Sonic_NODE_URL))
+        super().__init__()
+        self.llm = ChatOpenAI(
+            openai_api_key=Config.OPENAI_API_KEY,
+            openai_api_base=Config.OPENAI_BASE_URL,
+            model=Config.OPENAI_MODEL,
+        )
+        self.timestamp_to_data_service = TimestampToDataService()
+        self.timestamp_to_data_tool = Tool(
+            name="Timestamp to Data",
+            func=self.timestamp_to_data_service.get_data,
+            description="Convert a timestamp to a date and time",
+        )
+
+        tools = [
+            self.timestamp_to_data_tool,
+        ]
+
+        self.agent = initialize_agent(
+            tools=tools,
+            llm=self.llm,
+            agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+            verbose=True,
+        )
+
+        self.agent.handle_parsing_errors = True
 
     def handle_query(self, query: str, chat_history: list = None) -> str:
         """
