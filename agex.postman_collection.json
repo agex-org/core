@@ -42,7 +42,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"My Chat Session Title\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -115,7 +115,8 @@
 							"    pm.expect(jsonData).to.have.property('history');",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -123,11 +124,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseURL}}/{{session_id}}",
+					"raw": "{{baseURL}}/history/{{session_id}}",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
+						"history",
 						"{{session_id}}"
 					]
 				},
