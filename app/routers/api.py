@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from app.agents import agents
-from app.services import classifier
+from app.services import classifier, title_generator
 from app.services.chat_history_service import ChatHistoryService
 
 router = APIRouter()
@@ -75,8 +75,17 @@ async def process_query(session_id: str, query: Query, request: Request):
 
     # Ensure the session exists by checking the sessions list
     sessions = chat_history_service.get_sessions(client_ip)
-    if not any(session["session_id"] == session_id for session in sessions):
+    session = next((s for s in sessions if s["session_id"] == session_id), None)
+    if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    # Generate title if needed
+    if not session.get("title") or session["title"] == "":
+        generated_title = title_generator.generate(query.query).strip()
+        if generated_title:  # Only update if generator gave us something non-empty
+            chat_history_service.update_session_title(
+                client_ip, session_id, generated_title
+            )
 
     # Get existing chat history for the session
     history = chat_history_service.get_history(client_ip, session_id)

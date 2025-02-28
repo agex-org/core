@@ -82,6 +82,26 @@ class ChatHistoryService:
         self.redis_client.set(history_key, json.dumps(chat_history))
         return chat_history
 
+    def update_session_title(
+        self, client_ip: str, session_id: str, new_title: str
+    ) -> bool:
+        """
+        Update the title of an existing session.
+        """
+        sessions_list_key = self._sessions_list_key(client_ip)
+        sessions = self.get_sessions(client_ip)
+
+        for session in sessions:
+            if session["session_id"] == session_id:
+                session["title"] = new_title
+                break
+        else:
+            # Session not found
+            return False
+
+        self.redis_client.set(sessions_list_key, json.dumps(sessions))
+        return True
+
     def flush(self):
         self.redis_client.flushall()
         print("Redis flushed")
