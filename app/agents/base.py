@@ -1,4 +1,5 @@
 from abc import ABC
+from datetime import datetime
 
 from langchain.agents import AgentExecutor
 
@@ -26,6 +27,9 @@ class BaseAgent(ABC):
 
             # Combine context and query
             full_query = f"{context}{query}" if context else query
+            full_query += (
+                f"\nCurrent time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
 
             response = self.agent.invoke(full_query)
             return response.get("output")
