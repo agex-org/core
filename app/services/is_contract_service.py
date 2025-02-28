@@ -6,7 +6,8 @@ class IsContractService:
         self.web3 = Web3(Web3.HTTPProvider(rpc_url))
 
     def is_contract(self, address: str) -> bool:
-        # return self.w3.eth.get_code(address) != b""
+        # Clean the address (remove extra whitespace)
+        address = address.strip()
         try:
             # Convert to checksum address
             checksum_address = self.web3.to_checksum_address(address)
