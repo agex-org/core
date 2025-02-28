@@ -22,7 +22,9 @@ class TransactionAnalyzerAgent(BaseAgent):
 
         # Transaction Service
         self.transaction_service = TransactionService(
-            Config.SONICSCAN_API_URL, Config.SONICSCAN_API_KEY
+            Config.SONICSCAN_API_URL,
+            Config.SONICSCAN_API_KEY,
+            Config.SONIC_NODE_RPC_URL,
         )
 
         self.tx_detail_tool = Tool(

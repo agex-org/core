@@ -22,7 +22,7 @@ class AddressAnalyzerAgent(BaseAgent):
         )
 
         self.batch_balance_service = BatchBalanceService(
-            Config.SONIC_RPC_URL, Config.BATCH_BALANCE_CONTRACT_ADDRESS
+            Config.SONIC_NODE_RPC_URL, Config.BATCH_BALANCE_CONTRACT_ADDRESS
         )
 
         self.balance_tool = Tool(
@@ -31,7 +31,7 @@ class AddressAnalyzerAgent(BaseAgent):
             description="Get the token balances of a given address",
         )
 
-        self.is_contract_service = IsContractService(Config.SONIC_RPC_URL)
+        self.is_contract_service = IsContractService(Config.SONIC_NODE_RPC_URL)
         self.is_contract_tool = Tool(
             name="Is Contract",
             func=self.is_contract_service.is_contract,

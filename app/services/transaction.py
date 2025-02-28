@@ -1,10 +1,14 @@
 import requests
+from web3 import Web3
 
 
 class TransactionService:
-    def __init__(self, api_url: str, api_key: str):
-        self.sonicscan_api_url = api_url
-        self.sonicscan_api_key = api_key
+    def __init__(
+        self, sonicscan_api_url: str, sonicscan_api_key: str, node_provider_rpc: str
+    ):
+        self.sonicscan_api_url = sonicscan_api_url
+        self.sonicscan_api_key = sonicscan_api_key
+        self.web3 = Web3(Web3.HTTPProvider(node_provider_rpc))
 
     def get_transaction_details(self, transaction_hash: str) -> str:
         params = {
