@@ -25,11 +25,11 @@ class TransactionAnalyzerAgent(BaseAgent):
             Config.SONICSCAN_API_URL, Config.SONICSCAN_API_KEY
         )
 
-        # self.tx_detail_tool = Tool(
-        #     name="Get Transaction Details",
-        #     func=self.transaction_service.get_transaction_details,
-        #     description="Fetches detailed information for a given transaction hash from the Sonic Network",
-        # )
+        self.tx_detail_tool = Tool(
+            name="Get Transaction Details",
+            func=self.transaction_service.get_transaction_details,
+            description="Fetches detailed information for a given transaction hash from the Sonic Network",
+        )
 
         self.tx_receipt_tool = Tool(
             name="Get Transaction Receipt",
@@ -46,7 +46,7 @@ class TransactionAnalyzerAgent(BaseAgent):
         # )
 
         tools = [
-            # self.tx_detail_tool,
+            self.tx_detail_tool,
             self.tx_receipt_tool,
             # self.tx_analysis_tool,
         ]
