@@ -40,7 +40,7 @@ async def list_sessions(request: Request):
     return {"chat_history_list": session_ids}
 
 
-@router.get("/{session_id}")
+@router.get("/history/{session_id}")
 async def get_history(session_id: str, request: Request):
     client_ip = request.client.host
 
