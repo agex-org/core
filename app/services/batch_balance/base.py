@@ -17,9 +17,14 @@ class BatchBalanceService:
         self.contract = self.web3.eth.contract(address=address, abi=abi)
 
     def get_batch_balance(self, address: str) -> list[Balance]:
+        address = address.strip()
+        try:
+            checksum_address = self.web3.to_checksum_address(address)
+        except Exception as e:
+            raise ValueError(f"Invalid address provided: {e}")
         token_addresses = list(tokens.keys())
         balances = self.contract.functions.getAllTokensBalances(
-            [address], token_addresses
+            [checksum_address], token_addresses
         ).call()
         balances_list = []
         for balance in balances:
