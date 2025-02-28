@@ -10,16 +10,12 @@ router = APIRouter()
 chat_history_service = ChatHistoryService()
 
 
-class CreateSession(BaseModel):
-    title: str
-
-
 class Query(BaseModel):
     query: str
 
 
 @router.post("/create")
-async def create_session(data: CreateSession, request: Request):
+async def create_session(request: Request):
     """
     Create a new chat session.
     """
@@ -38,7 +34,7 @@ async def list_sessions(request: Request):
     sessions = chat_history_service.get_sessions(client_ip)
     # Return only the session ids (or you could return the full info if needed)
     session_ids = [
-        {"session_id": session["session_id"], "title": session["title"]}
+        {"session_id": session.get("session_id"), "title": session.get("title")}
         for session in sessions
     ]
     return {"chat_history_list": session_ids}
