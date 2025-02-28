@@ -21,11 +21,10 @@ class Query(BaseModel):
 @router.post("/create")
 async def create_session(data: CreateSession, request: Request):
     """
-    Create a new chat session with a title.
-    Returns the newly generated session_id.
+    Create a new chat session.
     """
     client_ip = request.client.host
-    session_id = chat_history_service.create_session(client_ip, data.title)
+    session_id = chat_history_service.create_session(client_ip)
     return {"session_id": session_id}
 
 
@@ -38,7 +37,10 @@ async def list_sessions(request: Request):
     client_ip = request.client.host
     sessions = chat_history_service.get_sessions(client_ip)
     # Return only the session ids (or you could return the full info if needed)
-    session_ids = [{"session_id": session["session_id"], "title": session["title"]} for session in sessions]
+    session_ids = [
+        {"session_id": session["session_id"], "title": session["title"]}
+        for session in sessions
+    ]
     return {"chat_history_list": session_ids}
 
 

@@ -22,15 +22,14 @@ class ChatHistoryService:
     def _sessions_list_key(self, client_ip: str) -> str:
         return f"chat_sessions:{client_ip}"
 
-    def create_session(self, client_ip: str, title: str) -> str:
+    def create_session(self, client_ip: str) -> str:
         """
-        Create a new chat session for the client with a title.
+        Create a new chat session for the client.
         A simple session_id is generated using a portion of a UUID.
         """
         session_id = str(uuid.uuid4().int)[:12]  # e.g. 123456789012
         session_info = {
             "session_id": session_id,
-            "title": title,
             "created_at": datetime.utcnow().isoformat(),
         }
         sessions_list_key = self._sessions_list_key(client_ip)
