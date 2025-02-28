@@ -1,3 +1,5 @@
+import json
+
 import requests
 from web3 import Web3
 
@@ -40,17 +42,32 @@ class TransactionService:
             return f"Error fetching transaction receipt from SonicScan: {e}"
 
     # --- Sonic Node (Web3) Methods ---
-    def get_transaction_details_node(self, transaction_hash: str) -> dict:
+    def get_transaction_details_node(self, transaction_hash: str) -> str:
         try:
             tx = self.web3.eth.get_transaction(transaction_hash)
-            # Convert the AttributeDict to a standard dictionary for readability.
-            return dict(tx)
+            tx_dict = dict(tx)
+            # Convert any HexBytes (or similar objects with a hex() method) to a hex string.
+            for key, value in tx_dict.items():
+                if hasattr(value, "hex"):
+                    tx_dict[key] = value.hex()
+                else:
+                    tx_dict[key] = value
+            # Return a pretty-printed JSON string.
+            return json.dumps(tx_dict, indent=2)
         except Exception as e:
-            return {"error": str(e)}
+            return f"Error fetching transaction receipt from SonicScan: {e}"
 
-    def get_transaction_receipt_node(self, transaction_hash: str) -> dict:
+    def get_transaction_receipt_node(self, transaction_hash: str) -> str:
         try:
             receipt = self.web3.eth.get_transaction_receipt(transaction_hash)
-            return dict(receipt)
+            receipt_dict = dict(receipt)
+            # Convert any HexBytes (or similar objects with a hex() method) to a hex string.
+            for key, value in receipt_dict.items():
+                if hasattr(value, "hex"):
+                    receipt_dict[key] = value.hex()
+                else:
+                    receipt_dict[key] = value
+            # Return a pretty-printed JSON string.
+            return json.dumps(receipt_dict, indent=2)
         except Exception as e:
-            return {"error": str(e)}
+            return f"Error fetching transaction receipt from SonicScan: {e}"
