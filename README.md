@@ -10,7 +10,18 @@
    pre-commit install
  ```
 
-## run project
+## Feeds
+Feed Educator
+```shell
+   python3 -m app.agents.educator.feed
+ ```
+
+Feed Auditor
+```shell
+   python3 -m app.agents.auditor.feed
+ ```
+
+## Run project
 
 ```shell
    docker compose up [--build]
