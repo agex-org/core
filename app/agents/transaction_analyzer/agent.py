@@ -52,13 +52,11 @@ class TransactionAnalyzerAgent(BaseAgent):
             description="Retrieves the transaction receipt directly from the Sonic Node",
         )
 
-        # # Service to structure the final analysis of the transaction.
-        # self.tx_analysis_formatter = TxAnalysisFormatter(self.llm)
-        # self.tx_analysis_tool = Tool(
-        #     name="Structure Transaction Analysis",
-        #     func=self.tx_analysis_formatter.format_analysis,
-        #     description="Structures a final summary of the transaction analysis, including status, gas usage, and key details",
-        # )
+        self.node_tx_receipt_tool = Tool(
+            name="Get Transaction Logs From Sonic Node",
+            func=self.transaction_service.get_transaction_logs_node,
+            description="Retrieves the transaction logs directly from the Sonic Node",
+        )
 
         tools = [
             self.tx_detail_tool,
