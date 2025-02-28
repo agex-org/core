@@ -28,15 +28,15 @@ class TransactionAnalyzerAgent(BaseAgent):
         )
 
         self.tx_detail_tool = Tool(
-            name="Get Transaction Details",
-            func=self.transaction_service.get_transaction_details,
-            description="Fetches detailed information for a given transaction hash from the Sonic Network",
+            name="Get Transaction Details From SonicScan",
+            func=self.transaction_service.get_transaction_details_sonicscan,
+            description="Fetches detailed information for a given transaction hash from the Sonic Blockchain Explorer",
         )
 
         self.tx_receipt_tool = Tool(
-            name="Get Transaction Receipt",
-            func=self.transaction_service.get_transaction_receipt,
-            description="Retrieves the receipt for a given transaction hash from the Sonic Network",
+            name="Get Transaction Receipt From SonicScan",
+            func=self.transaction_service.get_transaction_receipt_sonicscan,
+            description="Retrieves the receipt for a given transaction hash from the Sonic Blockchain Explorer",
         )
 
         # # Service to structure the final analysis of the transaction.
