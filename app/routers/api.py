@@ -80,12 +80,16 @@ async def process_query(session_id: str, query: Query, request: Request):
         raise HTTPException(status_code=404, detail="Session not found")
 
     # Generate title if needed
+    session_title = ""
     if not session.get("title") or session["title"] == "":
         generated_title = title_generator.generate(query.query).strip()
         if generated_title:  # Only update if generator gave us something non-empty
             chat_history_service.update_session_title(
                 client_ip, session_id, generated_title
             )
+        session_title = generated_title
+    else:
+        session_title = session.get("title")
 
     # Get existing chat history for the session
     history = chat_history_service.get_history(client_ip, session_id)
@@ -105,6 +109,7 @@ async def process_query(session_id: str, query: Query, request: Request):
         response=response,
     )
     return {
+        "title": session_title,
         "classification": classification,
         "response": response,
         "history": updated_history,

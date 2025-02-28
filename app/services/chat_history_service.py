@@ -30,6 +30,7 @@ class ChatHistoryService:
         session_id = str(uuid.uuid4().int)[:12]  # e.g. 123456789012
         session_info = {
             "session_id": session_id,
+            "title": "",
             "created_at": datetime.utcnow().isoformat(),
         }
         sessions_list_key = self._sessions_list_key(client_ip)
@@ -93,7 +94,7 @@ class ChatHistoryService:
 
         for session in sessions:
             if session["session_id"] == session_id:
-                session["title"] = new_title
+                session["title"] = new_title.strip('"')
                 break
         else:
             # Session not found
