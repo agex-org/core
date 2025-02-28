@@ -1,6 +1,6 @@
 from typing import Type
 
-from app.agents.address_analyzer_agent import AddressAnalyzerAgent
+from app.agents.address_analyzer.agent import AddressAnalyzerAgent
 from app.agents.auditor.agent import ContractAuditorAgent
 from app.agents.base import BaseAgent
 from app.agents.educator.agent import BlockchainEducatorAgent
