@@ -9,13 +9,15 @@ services:
       - ./pip_cache:/root/.cache/pip
     ports:
       - "8000:8000"
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     env_file:
       - .env
     networks:
       - agex-network
     depends_on:
       feed-educator:
+        condition: service_completed_successfully
+      feed-auditor:
         condition: service_completed_successfully
       redis:
         condition: service_started
@@ -26,7 +28,7 @@ services:
       - ./app:/app/app
       - ./faiss_index:/app/faiss_index
       - ./pip_cache:/root/.cache/pip
-    command: python app/agents/educator/feed.py
+    command: python3 -m app.agents.educator.feed
     env_file:
       - .env
     networks:
@@ -38,7 +40,7 @@ services:
       - ./app:/app/app
       - ./faiss_index:/app/faiss_index
       - ./pip_cache:/root/.cache/pip
-    command: python app/agents/auditor/feed.py
+    command: python3 -m app.agents.auditor.feed
     env_file:
       - .env
     networks:
