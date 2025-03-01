@@ -3,15 +3,11 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from app.agents import agents
-from app.services import classifier
+from app.services import classifier, title_generator
 from app.services.chat_history_service import ChatHistoryService
 
 router = APIRouter()
 chat_history_service = ChatHistoryService()
-
-
-class CreateSession(BaseModel):
-    title: str
 
 
 class Query(BaseModel):
@@ -19,13 +15,12 @@ class Query(BaseModel):
 
 
 @router.post("/create")
-async def create_session(data: CreateSession, request: Request):
+async def create_session(request: Request):
     """
-    Create a new chat session with a title.
-    Returns the newly generated session_id.
+    Create a new chat session.
     """
     client_ip = request.client.host
-    session_id = chat_history_service.create_session(client_ip, data.title)
+    session_id = chat_history_service.create_session(client_ip)
     return {"session_id": session_id}
 
 
@@ -38,11 +33,14 @@ async def list_sessions(request: Request):
     client_ip = request.client.host
     sessions = chat_history_service.get_sessions(client_ip)
     # Return only the session ids (or you could return the full info if needed)
-    session_ids = [{"session_id": session["session_id"], "title": session["title"]} for session in sessions]
+    session_ids = [
+        {"session_id": session.get("session_id"), "title": session.get("title")}
+        for session in sessions
+    ]
     return {"chat_history_list": session_ids}
 
 
-@router.get("/{session_id}")
+@router.get("/history/{session_id}")
 async def get_history(session_id: str, request: Request):
     client_ip = request.client.host
 
@@ -77,8 +75,21 @@ async def process_query(session_id: str, query: Query, request: Request):
 
     # Ensure the session exists by checking the sessions list
     sessions = chat_history_service.get_sessions(client_ip)
-    if not any(session["session_id"] == session_id for session in sessions):
+    session = next((s for s in sessions if s["session_id"] == session_id), None)
+    if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    # Generate title if needed
+    session_title = ""
+    if not session.get("title") or session["title"] == "":
+        generated_title = title_generator.generate(query.query).strip()
+        if generated_title:  # Only update if generator gave us something non-empty
+            chat_history_service.update_session_title(
+                client_ip, session_id, generated_title
+            )
+        session_title = generated_title
+    else:
+        session_title = session.get("title")
 
     # Get existing chat history for the session
     history = chat_history_service.get_history(client_ip, session_id)
@@ -98,6 +109,7 @@ async def process_query(session_id: str, query: Query, request: Request):
         response=response,
     )
     return {
+        "title": session_title,
         "classification": classification,
         "response": response,
         "history": updated_history,

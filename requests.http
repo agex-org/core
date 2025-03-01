@@ -1,3 +1,18 @@
+### Create a new chat session
+POST http://localhost:8000/api/create
+Content-Type: application/json
+
+
+### List chat sessions
+GET http://localhost:8000/api/list
+Content-Type: application/json
+
+### History chat sessions
+GET http://localhost:8000/history/48957693748
+Content-Type: application/json
+
+
+###
 POST http://localhost:8000/api/query
 Content-Type: application/json
 
