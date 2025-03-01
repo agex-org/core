@@ -61,7 +61,6 @@ multidict==6.1.0
 mypy-extensions==1.0.0
 networkx==3.4.2
 nodeenv==1.9.1
-numpy==2.2.3
 openai==1.63.0
 orjson==3.10.15
 packaging==24.2

@@ -7,6 +7,15 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app:$PYTHONPATH
+
+# Install system dependencies required for building PyMuPDF
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
 COPY requirements.txt .
@@ -16,6 +25,3 @@ RUN pip install --cache-dir /pip_cache -r requirements.txt
 
 # Copy project files
 COPY ./app /app/app
-
-# Ensure app directory is in Python path
-ENV PYTHONPATH=/app:$PYTHONPATH
