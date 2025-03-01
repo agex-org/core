@@ -12,6 +12,12 @@ class TitleGenerator:
             temperature=0,
         )
 
+    def _clean_title(self, title: str) -> str:
+        title = title.strip()
+        if title.startswith('"') and title.endswith('"'):
+            title = title[1:-1].strip()
+        return title
+
     def generate(self, query: str) -> str:
         prompt = (
             "Generate a concise and descriptive title for the following query:\n"
@@ -20,7 +26,8 @@ class TitleGenerator:
         )
         try:
             response = self.llm.invoke(input=prompt)
-            title = response.content.strip()
+            raw_title = response.content.strip()
+            title = self._clean_title(raw_title)
         except Exception as e:
             print(f"Error during title creation: {e}")
             title = "Untitled"

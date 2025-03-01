@@ -79,8 +79,15 @@ async def process_query(session_id: str, query: Query, request: Request):
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
+    # Get existing chat history for the session
+    history = chat_history_service.get_history(client_ip, session_id)
+    # Classify the query using the history context
+    classification = classifier.classify_query(query.query, history).lower()
+    agent = agents.get(classification)
+    if not agent:
+        raise HTTPException(status_code=404, detail="Could not classify the query")
+
     # Generate title if needed
-    session_title = ""
     if not session.get("title") or session["title"] == "":
         generated_title = title_generator.generate(query.query).strip()
         if generated_title:  # Only update if generator gave us something non-empty
@@ -91,13 +98,6 @@ async def process_query(session_id: str, query: Query, request: Request):
     else:
         session_title = session.get("title")
 
-    # Get existing chat history for the session
-    history = chat_history_service.get_history(client_ip, session_id)
-    # Classify the query using the history context
-    classification = classifier.classify_query(query.query, history).lower()
-    agent = agents.get(classification)
-    if not agent:
-        raise HTTPException(status_code=404, detail="Could not classify the query")
     # Process the query and get a response
     response = agent().handle_query(query.query, history)
     # Add the new interaction to the session's history
