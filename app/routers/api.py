@@ -97,7 +97,7 @@ async def process_query(session_id: str, query: Query, request: Request):
     classification = classifier.classify_query(query.query, history).lower()
     agent = agents.get(classification)
     if not agent:
-        raise HTTPException(status_code=200, detail="Could not classify the query")
+        raise HTTPException(status_code=404, detail="Could not classify the query")
     # Process the query and get a response
     response = agent().handle_query(query.query, history)
     # Add the new interaction to the session's history
