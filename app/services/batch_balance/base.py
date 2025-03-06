@@ -29,15 +29,16 @@ class BatchBalanceService:
         balances_list = []
         for balance in balances:
             balance_obj = Balance(
-                address=address,
+                address=checksum_address,
                 token=tokens[balance[1]]["symbol"],
                 balance=round(balance[2] / 10 ** tokens[balance[1]]["decimals"], 3),
             )
             balances_list.append(balance_obj)
 
-        sonic_balance = self.web3.eth.get_balance(address)
+        # Use checksum_address here too
+        sonic_balance = self.web3.eth.get_balance(checksum_address)
         sonic_balance_obj = Balance(
-            address=address,
+            address=checksum_address,
             token="SONIC",
             balance=round(sonic_balance / 10**18, 3),
         )
