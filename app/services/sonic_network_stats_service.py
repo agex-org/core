@@ -1,3 +1,5 @@
+from typing import Dict
+
 import requests
 
 
@@ -8,7 +10,7 @@ class SonicNetworkStatsService:
 
     def get_block_height(self) -> int:
         """
-        Fetches the current block height (latest block number) from Ethereum.
+        Fetches the current block height (latest block number) from the Ethereum network.
         """
         params = {
             "module": "proxy",
@@ -16,7 +18,7 @@ class SonicNetworkStatsService:
             "apikey": self.sonicscan_api_key,
         }
         response = requests.get(self.sonicscan_api_url, params=params)
-        response.raise_for_status()  # Raise an exception for HTTP errors.
+        response.raise_for_status()
         data = response.json()
         if "result" in data:
             # The result is returned as a hex string; convert it to int.
@@ -27,15 +29,19 @@ class SonicNetworkStatsService:
             )
 
     def get_total_supply_of_ether(self) -> int:
+        """
+        Returns the total supply of Ether (in whole ETH) by converting the result from wei.
+        """
         params = {
             "module": "stats",
             "action": "ethsupply",
             "apikey": self.sonicscan_api_key,
         }
         response = requests.get(self.sonicscan_api_url, params=params)
-        response.raise_for_status()  # Raise an exception for HTTP errors.
+        response.raise_for_status()
         data = response.json()
         if "result" in data:
+            # Convert wei to Ether (integer division)
             return int(data["result"]) // int(1e18)
         else:
             raise Exception(
@@ -43,19 +49,22 @@ class SonicNetworkStatsService:
                 + data.get("message", "Unknown error")
             )
 
-    def get_ether_last_price(self) -> dict():
+    def get_ether_last_price(self) -> Dict:
+        """
+        Returns the last price data for Ether.
+        """
         params = {
             "module": "stats",
             "action": "ethprice",
             "apikey": self.sonicscan_api_key,
         }
         response = requests.get(self.sonicscan_api_url, params=params)
-        response.raise_for_status()  # Raise an exception for HTTP errors.
+        response.raise_for_status()
         data = response.json()
         if "result" in data:
             return data["result"]
         else:
             raise Exception(
-                "Failed to get total supply of ether: "
+                "Failed to get ether last price: "
                 + data.get("message", "Unknown error")
             )
