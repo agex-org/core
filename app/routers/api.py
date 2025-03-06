@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, validator
 
 from app.agents import agents
-from app.services import classifier, title_generator
+from app.services import classifier, stats_service, title_generator
 from app.services.chat_history_service import ChatHistoryService
 
 router = APIRouter()
@@ -122,3 +122,19 @@ async def process_query(session_id: str, query: Query, request: Request):
         "response": response,
         "history": updated_history,
     }
+
+
+@router.get("/network/state")
+async def get_network_state(request: Request):
+    try:
+        block_height = stats_service.get_block_height()
+        tx_count_24h = stats_service.get_transaction_count_last_24h()
+        active_addresses_24h = stats_service.get_active_addresses_last_24h()
+        return {
+            "block_height": block_height,
+            "tx_count_24h": tx_count_24h,
+            "active_addresses_24h": active_addresses_24h,
+        }
+    except Exception as e:
+        print(f"Failed to get network state: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get network state")
