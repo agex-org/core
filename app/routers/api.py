@@ -2,8 +2,7 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, validator
 
-from app.agents import agents
-from app.services import classifier, title_generator
+from app.services import orchestrator, title_generator
 from app.services.chat_history_service import ChatHistoryService
 
 router = APIRouter()
@@ -77,7 +76,7 @@ async def flush(request: Request):
 async def process_query(session_id: str, query: Query, request: Request):
     """
     Process a query in the context of a specific session.
-    Uses the classifier and corresponding agent to handle the query.
+    Uses the orchestrator agent to handle the query.
     """
     client_ip = request.client.host
 
@@ -89,11 +88,6 @@ async def process_query(session_id: str, query: Query, request: Request):
 
     # Get existing chat history for the session
     history = chat_history_service.get_history(client_ip, session_id)
-    # Classify the query using the history context
-    classification = classifier.classify_query(query.query, history).lower()
-    agent = agents.get(classification)
-    if not agent:
-        raise HTTPException(status_code=404, detail="Could not classify the query")
 
     # Generate title if needed
     if not session.get("title") or session["title"] == "":
@@ -106,19 +100,22 @@ async def process_query(session_id: str, query: Query, request: Request):
     else:
         session_title = session.get("title")
 
-    # Process the query and get a response
-    response = agent().handle_query(query.query, history)
+    # Process the query using the orchestrator agent
+    response = orchestrator.handle_query(query.query, history)
+
     # Add the new interaction to the session's history
+    # Since we're not classifying anymore, we'll use "orchestrator" as the classification
     updated_history = chat_history_service.add_interaction(
         client_ip=client_ip,
         session_id=session_id,
         query=query.query,
-        classification=classification,
+        classification="orchestrator",
         response=response,
     )
+
     return {
         "title": session_title,
-        "classification": classification,
+        "classification": "orchestrator",
         "response": response,
         "history": updated_history,
     }
