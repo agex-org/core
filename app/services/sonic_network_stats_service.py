@@ -26,45 +26,36 @@ class SonicNetworkStatsService:
                 "Failed to get block height: " + data.get("message", "Unknown error")
             )
 
-    def get_transaction_count_last_24h(self) -> int:
-        """
-        Returns the total number of transactions in the last 24 hours.
-        NOTE: This endpoint is a placeholder. Replace 'txcount24h' with a valid action
-        from your data provider or aggregator.
-        """
+    def get_total_supply_of_ether(self) -> int:
         params = {
             "module": "stats",
-            "action": "txcount24h",  # Placeholder endpoint – replace with a valid one.
+            "action": "ethsupply",
             "apikey": self.sonicscan_api_key,
         }
         response = requests.get(self.sonicscan_api_url, params=params)
         response.raise_for_status()  # Raise an exception for HTTP errors.
         data = response.json()
         if "result" in data:
-            return int(data["result"])
+            return int(data["result"]) // int(1e18)
         else:
             raise Exception(
-                "Failed to get tx count in last 24h: "
+                "Failed to get total supply of ether: "
                 + data.get("message", "Unknown error")
             )
 
-    def get_active_addresses_last_24h(self) -> int:
-        """
-        Returns the number of unique active addresses in the last 24 hours.
-        NOTE: This endpoint is a placeholder. Replace 'activeaddresses24h' with a valid action
-        from your data provider or aggregator.
-        """
+    def get_ether_last_price(self) -> dict():
         params = {
             "module": "stats",
-            "action": "activeaddresses24h",  # Placeholder endpoint – replace with a valid one.
+            "action": "ethprice",
             "apikey": self.sonicscan_api_key,
         }
         response = requests.get(self.sonicscan_api_url, params=params)
+        response.raise_for_status()  # Raise an exception for HTTP errors.
         data = response.json()
         if "result" in data:
-            return int(data["result"])
+            return data["result"]
         else:
             raise Exception(
-                "Failed to get active addresses in last 24h: "
+                "Failed to get total supply of ether: "
                 + data.get("message", "Unknown error")
             )

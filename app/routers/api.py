@@ -128,12 +128,12 @@ async def process_query(session_id: str, query: Query, request: Request):
 async def get_network_state(request: Request):
     try:
         block_height = stats_service.get_block_height()
-        tx_count_24h = stats_service.get_transaction_count_last_24h()
-        active_addresses_24h = stats_service.get_active_addresses_last_24h()
+        total_supply_of_ether = stats_service.get_total_supply_of_ether()
+        ether_last_price = stats_service.get_ether_last_price()
         return {
             "block_height": block_height,
-            "tx_count_24h": tx_count_24h,
-            "active_addresses_24h": active_addresses_24h,
+            "total_supply_of_ether": total_supply_of_ether,
+            "ether_last_price": ether_last_price,
         }
     except Exception as e:
         print(f"Failed to get network state: {e}")
