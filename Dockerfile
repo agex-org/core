@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --cache-dir /pip_cache -r requirements.txt
+RUN pip install --cache-dir /root/.cache/pip -r requirements.txt
 
 # Copy project files
 COPY ./app /app/app

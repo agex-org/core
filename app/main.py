@@ -26,10 +26,7 @@ app.include_router(api.router, prefix="/api")
 
 @app.on_event("startup")
 async def startup():
-    # Initialize an async Redis client. Adjust host, port, and db as necessary.
-    redis_client = redis.Redis(
-        host=Config.REDIS_HOST, port=Config.REDIS_PORT, db=0, decode_responses=True
-    )
+    redis_client = redis.Redis(host=Config.REDIS_HOST, port=Config.REDIS_PORT, db=0)
     FastAPICache.init(RedisBackend(redis_client), prefix="fastapi-cache")
 
 
