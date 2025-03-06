@@ -34,4 +34,12 @@ class BatchBalanceService:
                 balance=round(balance[2] / 10 ** tokens[balance[1]]["decimals"], 3),
             )
             balances_list.append(balance_obj)
+
+        sonic_balance = self.web3.eth.get_balance(address)
+        sonic_balance_obj = Balance(
+            address=address,
+            token="SONIC",
+            balance=round(sonic_balance / 10**18, 3),
+        )
+        balances_list.append(sonic_balance_obj)
         return balances_list
