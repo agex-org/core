@@ -1,6 +1,6 @@
 # app/routers/history.py
 from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from app.agents import agents
 from app.services import classifier, title_generator
@@ -12,6 +12,14 @@ chat_history_service = ChatHistoryService()
 
 class Query(BaseModel):
     query: str
+
+    @validator("query")
+    def validate_query_length(cls, v):
+        if len(v) > 500:  # Example max length
+            raise ValueError("Query too long")
+        if len(v.strip()) == 0:
+            raise ValueError("Query cannot be empty")
+        return v
 
 
 @router.post("/create")
