@@ -43,7 +43,7 @@ class AddressAnalyzerAgent(BaseAgent):
         self.first_activity_tool = Tool(
             name="Get First Activity of Address",
             func=self.address_first_activity_service.get_first_activity,
-            description="Get the first activity of a given address",
+            description="Get the first activity of a given address. Native token is Sonic.",
         )
 
         self.timestamp_to_data_service = TimestampToDataService()
