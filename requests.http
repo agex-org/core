@@ -35,3 +35,8 @@ Content-Type: application/json
 {
     "query": "Has 0x45343543543432432342647654 ever transacted with an exchange?"
 }
+
+
+### Sonic Network State
+GET http://localhost:8000/api/network/state
+Content-Type: application/json
