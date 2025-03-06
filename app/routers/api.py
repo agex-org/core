@@ -1,5 +1,6 @@
 # app/routers/history.py
 from fastapi import APIRouter, HTTPException, Request
+from fastapi_cache.decorator import cache
 from pydantic import BaseModel, validator
 
 from app.agents import agents
@@ -125,6 +126,7 @@ async def process_query(session_id: str, query: Query, request: Request):
 
 
 @router.get("/network/state")
+@cache(expire=120)  # Cache for 120 seconds (2 minutes)
 async def get_network_state(request: Request):
     try:
         block_height = stats_service.get_block_height()
