@@ -1,8 +1,9 @@
 # app/routers/history.py
 from fastapi import APIRouter, HTTPException, Request
+from fastapi_cache.decorator import cache
 from pydantic import BaseModel, validator
 
-from app.services import orchestrator, title_generator
+from app.services import orchestrator, stats_service, title_generator
 from app.services.chat_history_service import ChatHistoryService
 
 router = APIRouter()
@@ -119,3 +120,20 @@ async def process_query(session_id: str, query: Query, request: Request):
         "response": response,
         "history": updated_history,
     }
+
+
+@router.get("/network/state")
+@cache(expire=120)  # Cache for 120 seconds (2 minutes)
+async def get_network_state(request: Request):
+    try:
+        block_height = stats_service.get_block_height()
+        total_supply_of_ether = stats_service.get_total_supply_of_ether()
+        ether_last_price = stats_service.get_ether_last_price()
+        return {
+            "block_height": block_height,
+            "total_supply_of_ether": total_supply_of_ether,
+            "ether_last_price": ether_last_price,
+        }
+    except Exception as e:
+        print(f"Failed to get network state: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get network state")
