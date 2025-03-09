@@ -27,8 +27,7 @@ async def create_session(request: Request):
     """
     Create a new chat session.
     """
-    client_ip = request.client.host
-    session_id = chat_history_service.create_session(client_ip)
+    session_id = chat_history_service.create_session(get_client_ip(request))
     return {"session_id": session_id}
 
 
@@ -38,8 +37,7 @@ async def list_sessions(request: Request):
     Return a list of session IDs for the client.
     Example response: { "chat_history_list": ["763875", "874561", "123456"] }
     """
-    client_ip = request.client.host
-    sessions = chat_history_service.get_sessions(client_ip)
+    sessions = chat_history_service.get_sessions(get_client_ip(request))
     # Return only the session ids (or you could return the full info if needed)
     session_ids = [
         {"session_id": session.get("session_id"), "title": session.get("title")}
@@ -50,7 +48,7 @@ async def list_sessions(request: Request):
 
 @router.get("/history/{session_id}")
 async def get_history(session_id: str, request: Request):
-    client_ip = request.client.host
+    client_ip = get_client_ip(request)
 
     # Check if the session exists in the sessions list
     sessions = chat_history_service.get_sessions(client_ip)
@@ -79,7 +77,7 @@ async def process_query(session_id: str, query: Query, request: Request):
     Process a query in the context of a specific session.
     Uses the orchestrator agent to handle the query.
     """
-    client_ip = request.client.host
+    client_ip = get_client_ip(request)
 
     # Ensure the session exists by checking the sessions list
     sessions = chat_history_service.get_sessions(client_ip)
@@ -137,3 +135,11 @@ async def get_network_state(request: Request):
     except Exception as e:
         print(f"Failed to get network state: {e}")
         raise HTTPException(status_code=500, detail="Failed to get network state")
+
+
+def get_client_ip(request):
+    print("headers: ", request.headers)
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    if x_forwarded_for:
+        return x_forwarded_for.split(",")[0].strip()
+    return request.client.host
