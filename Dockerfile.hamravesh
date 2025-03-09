@@ -26,6 +26,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY ./app /app/app
 
+# Copy faiss_index files explicitly into container
+COPY ./faiss_index /app/faiss_index
+
 # Expose the port for Uvicorn
 EXPOSE 8000
 
