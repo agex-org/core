@@ -12,7 +12,11 @@ from app.config import Config
 class ChatHistoryService:
     def __init__(self):
         self.redis_client = redis.Redis(
-            host=Config.REDIS_HOST, port=Config.REDIS_PORT, db=0, decode_responses=True
+            host=Config.REDIS_HOST,
+            port=Config.REDIS_PORT,
+            password=Config.REDIS_PASSWORD,
+            db=0,
+            decode_responses=True,
         )
         self.max_history = 10
 

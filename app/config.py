@@ -28,6 +28,7 @@ class Config:
     # Redis configuration
     REDIS_HOST = os.getenv("REDIS_HOST", "redis")
     REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+    REDIS_PASSWORD = int(os.getenv("REDIS_PASSWORD", "password"))
 
     # Etherscan API configuration
     SONICSCAN_API_URL = "https://api.sonicscan.org/api"
