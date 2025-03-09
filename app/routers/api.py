@@ -138,7 +138,6 @@ async def get_network_state(request: Request):
 
 
 def get_client_ip(request):
-    print("headers: ", request.headers)
     x_forwarded_for = request.headers.get("x-forwarded-for")
     if x_forwarded_for:
         return x_forwarded_for.split(",")[0].strip()
