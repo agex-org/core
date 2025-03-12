@@ -5,7 +5,7 @@
 🔍 **AgEx: The Agentic Blockchain Explorer**
 
 - Live Demo: [AgEx.site](https://agex.site)
-- YouTube Demo Video: [Watch Now](https://youtube.com/link)
+- YouTube Demo Video: [Watch Now](https://youtu.be/SonPWKoMN2k)
 - GitHub Organization: [AgEx on GitHub](https://github.com/agex-org)
 - Follow Us on X: [@Agex_org](https://twitter.com/Agex_org)
 
